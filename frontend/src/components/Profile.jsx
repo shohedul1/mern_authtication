@@ -20,7 +20,7 @@ const Profile = () => {
             .then((res) => {
                 setLoading(false)
                 setData(res.data.data)
-                console.log("User data fetched", res);
+                // console.log("User data fetched", res);
             })
             .catch((err) => {
                 console.log("Error while fetch data", err)

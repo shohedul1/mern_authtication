@@ -22,7 +22,7 @@ const Login = () => {
             .then((res) => {
                 setLoading(false)
                 toast("Login Successful");
-                console.log("Login done", res);
+                // console.log("Login done", res);
                 localStorage.setItem('token', JSON.stringify(res.data.token))
                 navigate("/profile")
             })
