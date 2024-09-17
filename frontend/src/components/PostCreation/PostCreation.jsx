@@ -30,7 +30,7 @@ const PostCreation = ({ user, loading }) => {
         const postData = { content };
         if (image) postData.image = await readFileAsDataURL(image);
 
-        axios.post("http://localhost:5000/user/post/create", postData, header) // Adjust URL for post creation
+        axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/post/create`, postData, header) // Adjust URL for post creation
             .then((res) => {
                 toast(res.data.message);
             })

@@ -41,7 +41,7 @@ const Home = () => {
         Authorization: `Bearer ${token}`
       }
     }
-    axios.post(`http://localhost:5000/user/post`, {}, header)
+    axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/post`, {}, header)
       .then((res) => {
         setPosts(res.data.data)
         // console.log("User data fetched", res);
