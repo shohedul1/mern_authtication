@@ -1,6 +1,6 @@
 import axios from 'axios';
+import { Loader } from 'lucide-react';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const Login = () => {
@@ -8,10 +8,10 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false)
 
-    const navigate = useNavigate()
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setLoading(true)
 
         const payload = {
             email: email,
@@ -20,16 +20,17 @@ const Login = () => {
 
         axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/login`, payload)
             .then((res) => {
-                setLoading(false)
                 toast("Login Successful");
                 // console.log("Login done", res);
                 localStorage.setItem('token', JSON.stringify(res.data.token))
-                navigate("/profile")
             })
             .catch((err) => {
                 toast("Invalid Credencial");
                 console.log("Error while login", err)
-                setLoading(false)
+            })
+            .finally(() => {
+                setLoading(false);
+                window.location.reload();
             })
     };
 
@@ -61,11 +62,10 @@ const Login = () => {
                         />
                     </div>
                     <button
-                        disabled={loading}
                         type="submit"
-                        className="w-full py-2 disabled:opacity-70 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+                        className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 flex justify-center"
                     >
-                        {loading ? 'Submitting..' : "Login"}
+                        {loading ? <Loader className='size-5 animate-spin' /> : "Login"}
                     </button>
                 </form>
             </div>

@@ -37,8 +37,10 @@ export const Register = async (req, res) => {
         });
 
         await user.save();
+        // const token = jwt.sign({ id: user._id, email: user.email }, secreteKey, { expiresIn: '1hr' })
 
-        return res.status(201).json({ status: true, message: "Register successful" })
+
+        return res.status(201).json({ status: true, message: "Register successful", })
     } catch (error) {
         return res.status(400).json({ status: false, message: "Something went wrong", error: error.message })
     }
@@ -55,7 +57,7 @@ export const Login = async (req, res) => {
             return res.status(400).json({ status: true, message: "Invalid Credential" })
         }
 
-        const token = jwt.sign({ id: user._id, email: user.email }, secreteKey, { expiresIn: '1hr' })
+        const token = jwt.sign({ id: user._id, email: user.email }, secreteKey, { expiresIn: "15d", })
 
         return res.status(201).json({ status: true, message: "Login successful", token: token, user })
     } catch (error) {
