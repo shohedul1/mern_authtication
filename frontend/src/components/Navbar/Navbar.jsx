@@ -1,9 +1,35 @@
 import { Link } from "react-router-dom";
 import { Bell, Home, LogOut, User, Users } from "lucide-react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const Navbar = () => {
+    const [authUser, setAuthUser] = useState(null);
+
+    const token = JSON.parse(localStorage.getItem('token'))
+
+    const fetchData = () => {
+        const header = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/profile`, {}, header)
+            .then((res) => {
+                setAuthUser(res.data.data)
+                // console.log("User data fetched", res);
+            })
+            .catch((err) => {
+                console.log("Error while fetch data", err)
+            })
+    }
+    // console.log('posts', posts);
+
+    useEffect(() => {
+        fetchData();
+    }, [])
     //   const authUser = false;
-    const authUser = localStorage.getItem('token');
     const handleLogout = () => {
         localStorage.removeItem('token');
         window.location.reload();

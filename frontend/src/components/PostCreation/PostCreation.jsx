@@ -3,15 +3,13 @@ import axios from "axios";
 import { Image, Loader } from "lucide-react";
 import { toast } from "react-toastify";
 
-const PostCreation = ({ user, loading }) => {
+const PostCreation = ({ authUser }) => {
     const [content, setContent] = useState('');
     const [ispending, setIspending] = useState(false)
     const [image, setImage] = useState(null); // Initialize as null
 
 
     const token = JSON.parse(localStorage.getItem('token'))
-
-
 
 
     const handleSubmit = async (e) => {
@@ -42,7 +40,9 @@ const PostCreation = ({ user, loading }) => {
                 setIspending(false);
                 setContent("");
                 setImage(null);
-                window.location.reload();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000)
             })
     };
 
@@ -64,46 +64,42 @@ const PostCreation = ({ user, loading }) => {
 
     return (
         <>
-            {
-                loading && (
-                    <div className='bg-slate-100 rounded-lg shadow mb-4 p-4'>
-                        <div className='flex space-x-3'>
-                            <img src={user.profilePicture || "/avatar.png"} alt={user.name} className='size-12 rounded-full' />
-                            <textarea
-                                placeholder="What's on your mind?"
-                                className='w-full p-3 rounded-lg bg-base-100 hover:bg-base-200 focus:bg-base-200 focus:outline-none resize-none transition-colors duration-200 min-h-[100px]'
-                                name="content"
-                                value={content}
-                                onChange={(e) => setContent(e.target.value)}
-                            />
-                        </div>
+            <div className='bg-slate-100 rounded-lg shadow mb-4 p-4'>
+                <div className='flex space-x-3'>
+                    <img src={authUser.profilePicture || "/avatar.png"} alt={authUser.name} className='size-12 rounded-full' />
+                    <textarea
+                        placeholder="What's on your mind?"
+                        className='w-full p-3 rounded-lg bg-base-100 hover:bg-base-200 focus:bg-base-200 focus:outline-none resize-none transition-colors duration-200 min-h-[100px]'
+                        name="content"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                    />
+                </div>
 
-                        {image && (
-                            <div className='mt-4'>
-                                <img src={URL.createObjectURL(image)} alt='Selected' className='w-full h-auto rounded-lg' />
-                            </div>
-                        )}
-
-                        <div className='flex justify-between items-center mt-4'>
-                            <div className='flex space-x-4'>
-                                <label className='flex items-center text-info hover:text-info-dark transition-colors duration-200 cursor-pointer'>
-                                    <Image size={20} className='mr-2' />
-                                    <span>Photo</span>
-                                    <input type='file' accept='image/*' className='hidden' name="image" onChange={handleChange} />
-                                </label>
-                            </div>
-
-                            <button
-                                onClick={handleSubmit}
-                                type="submit"
-                                className="py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 flex justify-center"
-                            >
-                                {ispending ? <Loader className='size-5 animate-spin' /> : "Post"}
-                            </button>
-                        </div>
+                {image && (
+                    <div className='mt-4'>
+                        <img src={URL.createObjectURL(image)} alt='Selected' className='w-full h-auto rounded-lg' />
                     </div>
-                )
-            }
+                )}
+
+                <div className='flex justify-between items-center mt-4'>
+                    <div className='flex space-x-4'>
+                        <label className='flex items-center text-info hover:text-info-dark transition-colors duration-200 cursor-pointer'>
+                            <Image size={20} className='mr-2' />
+                            <span>Photo</span>
+                            <input type='file' accept='image/*' className='hidden' name="image" onChange={handleChange} />
+                        </label>
+                    </div>
+
+                    <button
+                        onClick={handleSubmit}
+                        type="submit"
+                        className="py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 flex justify-center"
+                    >
+                        {ispending ? <Loader className='size-5 animate-spin' /> : "Post"}
+                    </button>
+                </div>
+            </div>
         </>
     );
 };

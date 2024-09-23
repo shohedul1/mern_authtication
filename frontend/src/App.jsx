@@ -11,17 +11,20 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios'
+import Loader from './components/Loader/Loader'
 
 
 const App = () => {
-    // const authUser = false;
-    const [data, setData] = useState('');
+    const [authUser, setAuthUser] = useState(null);
+    const [loading, setLoading] = useState(false)
 
 
 
     const token = JSON.parse(localStorage.getItem('token'))
 
     const fetchData = () => {
+        setLoading(true)
+
         const header = {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -30,11 +33,17 @@ const App = () => {
 
         axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/profile`, {}, header)
             .then((res) => {
-                setData(res.data.data)
+                setAuthUser(res.data.data)
                 // console.log("User data fetched", res);
             })
             .catch((err) => {
                 console.log("Error while fetch data", err)
+                setLoading(false)
+
+            })
+            .finally(() => {
+                setLoading(false)
+
             })
     }
 
@@ -44,19 +53,27 @@ const App = () => {
 
     return (
 
-        <Layout>
-            <Routes>
-                <Route path='/' element={data ? <Home /> : <Navigate to={"/login"} />} />
-                <Route path='/signup' element={!data ? <Registration /> : <Navigate to={"/"} />} />
-                <Route path='/login' element={!data ? <Login /> : <Navigate to={"/"} />} />
-                <Route path='/notifications' element={data ? <NotificationsPage /> : <Navigate to={"/login"} />} />
-                <Route path='/network' element={data ? <NetworkPage /> : <Navigate to={"/login"} />} />
-                <Route path='/post/:postId' element={data ? <PostPage /> : <Navigate to={"/login"} />} />
-                <Route path='/profile/:username' element={data ? <ProfilePage /> : <Navigate to={"/login"} />} />
-            </Routes>
+        <>
+            {
+                loading ? (
+                    <Loader />
+                ) : (
+                    <Layout>
+                        <Routes>
+                            <Route path='/' element={authUser ? <Home /> : <Navigate to={"/login"} />} />
+                            <Route path='/signup' element={!authUser ? <Registration /> : <Navigate to={"/"} />} />
+                            <Route path='/login' element={!authUser ? <Login /> : <Navigate to={"/"} />} />
+                            <Route path='/notifications' element={authUser ? <NotificationsPage /> : <Navigate to={"/login"} />} />
+                            <Route path='/network' element={authUser ? <NetworkPage /> : <Navigate to={"/login"} />} />
+                            <Route path='/post/:postId' element={authUser ? <PostPage /> : <Navigate to={"/login"} />} />
+                            <Route path='/profile/:username' element={authUser ? <ProfilePage /> : <Navigate to={"/login"} />} />
+                        </Routes>
+                    </Layout>
+                )
+            }
             <ToastContainer />
 
-        </Layout>
+        </>
     )
 }
 
