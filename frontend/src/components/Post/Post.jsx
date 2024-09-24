@@ -32,7 +32,7 @@ const Post = ({ post, authUser, onDelete }) => {
                 Authorization: `Bearer ${token}`
             }
         };
-        axios.delete(`http://localhost:5000/user/post/delete/${post._id}`, header)
+        axios.delete(`${import.meta.env.VITE_BACKEND_URL}/user/post/delete/${post._id}`, header)
             .then((res) => {
                 toast.success(res.data.message);
                 onDelete(post._id); // Call the callback to remove the post from UI
@@ -50,7 +50,7 @@ const Post = ({ post, authUser, onDelete }) => {
             }
         };
 
-        axios.post(`http://localhost:5000/user/post/${post._id}/like`, {}, header)
+        axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/post/${post._id}/like`, {}, header)
             .then((res) => {
                 const updatedLikes = res.data.likes.length;
                 setLikes(updatedLikes);
@@ -74,7 +74,7 @@ const Post = ({ post, authUser, onDelete }) => {
         }
 
         axios.post(
-            `http://localhost:5000/user/post/${post._id}/comment`,
+            `${import.meta.env.VITE_BACKEND_URL}/user/post/${post._id}/comment`,
             { content },  // Wrap content in an object
             header
         )
@@ -134,11 +134,27 @@ const Post = ({ post, authUser, onDelete }) => {
                 <p className='mb-4'>{post.content}</p>
                 {post.image && <img src={post.image} alt='Post content' className='rounded-lg w-full mb-4' />}
                 <div className='flex justify-between text-info'>
-                    <PostAction
+                    {/* <PostAction
                         icon={isLiked ? (<AiFillLike size={25} className="text-blue-600" />) : (< ThumbsUp size={25} />)}
                         text={<div className={isLiked ? "text-[#1a71ff] font-bold" : "font-bold"}>Like ({likes})</div>}
                         onClick={handleLikePost}
+                    /> */}
+                    <PostAction
+                        icon={
+                            isLiked ? (
+                                <AiFillLike size={25} className="text-blue-600" />
+                            ) : (
+                                <ThumbsUp size={25} />
+                            )
+                        }
+                        text={
+                            <div className={isLiked ? "text-blue-600 font-bold" : "font-bold"}>
+                                Like ({likes})
+                            </div>
+                        }
+                        onClick={handleLikePost}
                     />
+
                     <PostAction
                         icon={<MessageCircle size={18} />}
                         text={`Comment (${comments.length})`}  // Display the length of comments

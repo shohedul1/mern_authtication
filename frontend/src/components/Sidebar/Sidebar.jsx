@@ -14,13 +14,13 @@ export default function Sidebar({ authUser }) {
                             backgroundImage: `url("${authUser.bannerImg || "/banner.png"}")`,
                         }}
                     />
-                    <Link to={`/profile/${authUser.username}`}>
+                    <Link to={`/profile/${authUser?.data?.username}`}>
                         <img
-                            src={authUser.profilePicture || "/avatar.png"}
+                            src={authUser?.data?.profilePicture || "/avatar.png"}
                             alt={authUser.name}
                             className='w-20 h-20 rounded-full mx-auto mt-[-40px]'
                         />
-                        <h2 className='text-xl font-semibold mt-2'>{authUser.name}</h2>
+                        <h2 className='text-xl font-semibold mt-2'>{authUser?.data?.name}</h2>
                     </Link>
 
                 </div>
@@ -55,7 +55,7 @@ export default function Sidebar({ authUser }) {
                     </nav>
                 </div>
                 <div className='border-t border-base-100 p-4'>
-                    <Link to={`/profile/${authUser.username}`} className='text-sm font-semibold'>
+                    <Link to={`/profile/${authUser?.data?.username}`} className='text-sm font-semibold'>
                         Visit your profile
                     </Link>
                 </div>

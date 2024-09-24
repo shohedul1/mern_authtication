@@ -18,7 +18,7 @@ const Home = () => {
 
 
 
-  const token = JSON.parse(localStorage.getItem('token'))
+  const token = JSON.parse(localStorage.getItem('token'));
 
   const fetchData = () => {
     const header = {
@@ -29,7 +29,7 @@ const Home = () => {
 
     axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/profile`, {}, header)
       .then((res) => {
-        setAuthUser(res.data.data)
+        setAuthUser(res.data)
         // console.log("User data fetched", res);
       })
       .catch((err) => {
@@ -40,19 +40,22 @@ const Home = () => {
   const fetchPost = () => {
     const header = {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
-    axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/post`, {}, header)
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios.get(`http://localhost:5000/user/post`, header)
       .then((res) => {
-        setPosts(res.data.data)
-        // console.log("User data fetched", res);
+        setPosts(res.data);
       })
       .catch((err) => {
-        console.log("Error while fetch data", err)
-      })
+        console.log("Error while fetching posts", err);
+      });
+  };
 
-  }
+
+
+
 
   const fetchSuggestions = () => {
     const header = {
@@ -61,7 +64,7 @@ const Home = () => {
       },
     };
 
-    axios.post(`http://localhost:5000/user/suggestions`, {}, header)
+    axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/suggestions`, {}, header)
       .then((res) => {
         // toast("Suggestions fetched successfully");
         // Directly assign res.data since the backend sends an array
@@ -73,17 +76,18 @@ const Home = () => {
       });
   };
 
-  // console.log(recommendedUsers);
 
 
 
-  // console.log('posts', posts);
 
   useEffect(() => {
     fetchData();
-    fetchPost();
     fetchSuggestions();
-  }, [])
+    fetchPost();
+  }, []);
+
+
+  console.log('posts', posts)
   return (
     <>
       <div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>
@@ -119,10 +123,6 @@ const Home = () => {
             </div>
           </div>
         )}
-
-
-
-
       </div>
 
     </>
@@ -130,4 +130,3 @@ const Home = () => {
 }
 
 export default Home
-

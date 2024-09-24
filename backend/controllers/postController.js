@@ -11,10 +11,10 @@ export const getFeedPosts = async (req, res) => {
             .populate("comments.user", "name profilePicture")
             .sort({ createdAt: -1 });
 
-        return res.status(200).json({ data: posts });
+        return res.status(200).json(posts);
     } catch (error) {
         console.error("Error in getFeedPosts controller:", error);
-        res.status(500).json({ message: "Server error" });
+        return res.status(500).json({ message: "Server error" });
     }
 };
 
@@ -123,7 +123,7 @@ export const createComment = async (req, res) => {
     try {
         const postId = req.params.id;
         const { content } = req.body;
-        console.log('content',content);
+        console.log('content', content);
 
         // Ensure req.user is populated
         if (!req.user) {
