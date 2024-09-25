@@ -16,12 +16,12 @@ const Post = ({ post, authUser, onDelete }) => {
     const [content, setContent] = useState('');
     const [comments, setComments] = useState(post.comments || []); // Initialize with post.comments
 
-    const isOwner = authUser._id === post.author._id;
+    const isOwner = authUser.data._id === post.author._id;
     const token = JSON.parse(localStorage.getItem('token'));
 
     useEffect(() => {
         setLikes(post.likes.length);
-        setIsLiked(post.likes.includes(authUser._id));
+        setIsLiked(post.likes.includes(authUser.data._id));
     }, [post]);
 
     // Delete functionality
@@ -100,6 +100,8 @@ const Post = ({ post, authUser, onDelete }) => {
         return formatDistanceToNow(date, { addSuffix: true });
     };
 
+    // console.log('authUser', authUser)
+
     return (
         <div className='bg-white rounded-lg shadow mb-4'>
             <div className='p-4'>
@@ -134,26 +136,12 @@ const Post = ({ post, authUser, onDelete }) => {
                 <p className='mb-4'>{post.content}</p>
                 {post.image && <img src={post.image} alt='Post content' className='rounded-lg w-full mb-4' />}
                 <div className='flex justify-between text-info'>
-                    {/* <PostAction
+                    <PostAction
                         icon={isLiked ? (<AiFillLike size={25} className="text-blue-600" />) : (< ThumbsUp size={25} />)}
                         text={<div className={isLiked ? "text-[#1a71ff] font-bold" : "font-bold"}>Like ({likes})</div>}
                         onClick={handleLikePost}
-                    /> */}
-                    <PostAction
-                        icon={
-                            isLiked ? (
-                                <AiFillLike size={25} className="text-blue-600" />
-                            ) : (
-                                <ThumbsUp size={25} />
-                            )
-                        }
-                        text={
-                            <div className={isLiked ? "text-blue-600 font-bold" : "font-bold"}>
-                                Like ({likes})
-                            </div>
-                        }
-                        onClick={handleLikePost}
                     />
+
 
                     <PostAction
                         icon={<MessageCircle size={18} />}

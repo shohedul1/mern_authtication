@@ -1,6 +1,8 @@
 import React from 'react'
 
-const AboutSection = () => {
+const AboutSection = ({ userData }) => {
+  console.log('userData', userData)
+
   return (
     <div>AboutSection</div>
   )

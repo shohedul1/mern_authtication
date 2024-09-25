@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken"; // Import jsonwebtoken
+import cloudinary from "../cloudinary/cloudinary.js";
 
 const secreteKey = "swer&*&^#*&^@HJHjsdhfksdfhskfhw9853734598374";
 
@@ -114,6 +115,112 @@ export const getSuggestedConnections = async (req, res) => {
         return res.json({ data: suggestedUser });
     } catch (error) {
         console.error("Error in getSuggestedConnections controller:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+// export const updateProfile = async (req, res) => {
+//     try {
+//         const allowedFields = [
+//             "name",
+//             "username",
+//             "headline",
+//             "about",
+//             "location",
+//             "profilePicture",
+//             "bannerImg",
+//             "skills",
+//             "experience",
+//             "education",
+//         ];
+
+//         const updatedData = {};
+
+//         for (const field of allowedFields) {
+//             if (req.body[field]) {
+//                 updatedData[field] = req.body[field];
+//             }
+//         }
+
+//         if (req.body.profilePicture) {
+//             const result = await cloudinary.uploader.upload(req.body.profilePicture);
+//             updatedData.profilePicture = result.secure_url;
+//         }
+
+//         if (req.body.bannerImg) {
+//             const result = await cloudinary.uploader.upload(req.body.bannerImg);
+//             updatedData.bannerImg = result.secure_url;
+//         }
+
+//         const user = await User.findByIdAndUpdate(req.user._id, { $set: updatedData }, { new: true }).select(
+//             "-password"
+//         );
+
+//         return res.json(user, { message: "user profile updata" });
+//     } catch (error) {
+//         console.error("Error in updateProfile controller:", error);
+//         res.status(500).json({ message: "Server error" });
+//     }
+// };
+
+
+export const updateProfile = async (req, res) => {
+    try {
+        const allowedFields = [
+            "name",
+            "username",
+            "headline",
+            "about",
+            "location",
+            "profilePicture",
+            "bannerImg",
+            "skills",
+            "experience",
+            "education",
+        ];
+
+        const updatedData = {};
+
+        // Check allowed fields in the request body
+        for (const field of allowedFields) {
+            if (req.body[field]) {
+                updatedData[field] = req.body[field];
+            }
+        }
+
+        // Handle profile picture upload
+        if (req.body.profilePicture) {
+            try {
+                const result = await cloudinary.uploader.upload(req.body.profilePicture);
+                updatedData.profilePicture = result.secure_url;
+            } catch (error) {
+                console.error('Error uploading profile picture to Cloudinary:', error);
+                return res.status(500).json({ message: "Error uploading profile picture" });
+            }
+        }
+
+        // Handle banner image upload
+        if (req.body.bannerImg) {
+            try {
+                const result = await cloudinary.uploader.upload(req.body.bannerImg);
+                updatedData.bannerImg = result.secure_url;
+            } catch (error) {
+                console.error('Error uploading banner image to Cloudinary:', error);
+                return res.status(500).json({ message: "Error uploading banner image" });
+            }
+        }
+
+        // Update user profile in the database
+        const user = await User.findByIdAndUpdate(req.user._id, { $set: updatedData }, { new: true }).select("-password");
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Success response with updated user data
+        return res.json({ data: user, message: "User profile updated successfully" });
+    } catch (error) {
+        console.error("Error in updateProfile controller:", error);
         res.status(500).json({ message: "Server error" });
     }
 };

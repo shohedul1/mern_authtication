@@ -3,15 +3,16 @@ import { Home, UserPlus, Bell } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function Sidebar({ authUser }) {
+    console.log('authUser', authUser)
 
     return (
         <>
             < div className='bg-gray-100 rounded-lg shadow'>
                 <div className='p-4 text-center'>
                     <div
-                        className='h-16 rounded-t-lg bg-cover bg-center'
+                        className='h-32 rounded-t-lg bg-cover bg-center'
                         style={{
-                            backgroundImage: `url("${authUser.bannerImg || "/banner.png"}")`,
+                            backgroundImage: `url("${authUser?.data?.bannerImg || "/banner.png"}")`,
                         }}
                     />
                     <Link to={`/profile/${authUser?.data?.username}`}>

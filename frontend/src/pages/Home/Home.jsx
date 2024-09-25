@@ -44,7 +44,7 @@ const Home = () => {
       },
     };
 
-    axios.get(`http://localhost:5000/user/post`, header)
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/user/post`, header)
       .then((res) => {
         setPosts(res.data);
       })
@@ -87,7 +87,7 @@ const Home = () => {
   }, []);
 
 
-  console.log('posts', posts)
+  // console.log('posts', posts)
   return (
     <>
       <div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>
