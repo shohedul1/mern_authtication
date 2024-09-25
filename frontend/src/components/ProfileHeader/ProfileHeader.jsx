@@ -54,7 +54,7 @@ const ProfileHeader = ({ userData }) => {
     console.log('updateUser', updateUser)
 
     try {
-      const res = await axios.put(`http://localhost:5000/user/updateprofile`, updateUser, headers);
+      const res = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/user/updateprofile`, updateUser, headers);
       toast.success(res.data.message);
       setProfileToEdit(res.data); // Update state with new profile data
     } catch (err) {
