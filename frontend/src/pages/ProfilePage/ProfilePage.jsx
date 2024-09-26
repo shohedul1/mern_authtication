@@ -4,13 +4,36 @@ import AboutSection from "../../components/AboutSection/AboutSection";
 import axios from "axios";
 import { toast } from "react-toastify";
 import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
+import ExperienceSection from "../../components/ExperienceSection/ExperienceSection";
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState(null);  // Default as an empty object
+  const [authUser, setAuthUser] = useState(null); // Authenticated user data
+
+  // Fetch authenticated user data
+  const fetchData = async () => {
+    const token = localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')) : null;
+    if (!token) return;
+
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/profile`, {}, { headers });
+      setAuthUser(res.data.data);
+    } catch (err) {
+      console.error('Error while fetching data', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const token = JSON.parse(localStorage.getItem('token'));
   const { username } = useParams();
-
+  // get data username filtering 
   const fetchProfile = () => {
     const header = {
       headers: {
@@ -35,8 +58,9 @@ const ProfilePage = () => {
 
   return (
     <div className='max-w-4xl mx-auto p-4'>
-      <ProfileHeader userData={userData} />
-      {/* <AboutSection userData={userData} /> */}
+      <ProfileHeader userData={userData} authUser={authUser} />
+      <AboutSection userData={userData} authUser={authUser} />
+      <ExperienceSection userData={userData} authUser={authUser} />
 
     </div>
   );
