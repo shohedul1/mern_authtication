@@ -5,6 +5,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import ProfileHeader from "../../components/ProfileHeader/ProfileHeader";
 import ExperienceSection from "../../components/ExperienceSection/ExperienceSection";
+import EducationSection from "../../components/EducationSection/EducationSection";
+import SkillsSection from "../../components/SkillsSection/SkillsSection";
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState(null);  // Default as an empty object
@@ -61,7 +63,8 @@ const ProfilePage = () => {
       <ProfileHeader userData={userData} authUser={authUser} />
       <AboutSection userData={userData} authUser={authUser} />
       <ExperienceSection userData={userData} authUser={authUser} />
-
+      <EducationSection userData={userData} authUser={authUser} />
+      <SkillsSection userData={userData} authUser={authUser} />
     </div>
   );
 }
